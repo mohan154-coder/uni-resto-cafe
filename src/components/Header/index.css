@@ -1,0 +1,76 @@
+.header-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 20px;
+  background-color: #ffffff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
+  font-family: 'Roboto', sans-serif;
+}
+
+.restaurant-name {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  color: #323f4b;
+}
+
+.orders-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.my-orders-text {
+  display: none;
+  margin: 0 14px 0 0;
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #616e7c;
+}
+
+.cart-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.cart-icon {
+  width: 32px;
+  height: 32px;
+  color: #616e7c;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+@media screen and (min-width: 768px) {
+  .header-container {
+    padding: 22px 24px;
+  }
+
+  .my-orders-text {
+    display: block;
+  }
+}
