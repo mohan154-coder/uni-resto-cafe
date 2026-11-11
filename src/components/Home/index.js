@@ -1,0 +1,118 @@
+import {useState, useEffect} from 'react'
+import Header from '../Header'
+import CategoryTabs from '../CategoryTabs'
+import DishList from '../DishList'
+import './index.css'
+
+const apiUrl =
+  'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details'
+
+const Home = () => {
+  const [restaurantName, setRestaurantName] = useState('')
+  const [categoriesList, setCategoriesList] = useState([])
+  const [activeCategoryId, setActiveCategoryId] = useState('')
+  const [quantities, setQuantities] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    const getMenuData = async () => {
+      try {
+        const response = await fetch(apiUrl)
+        const data = await response.json()
+        const restaurantData = Array.isArray(data) ? data[0] : data
+        const apiRestaurantName = restaurantData.restaurant_name
+        const menuList = restaurantData.table_menu_list
+        const firstCategoryId = menuList[0].menu_category_id
+
+        setRestaurantName(apiRestaurantName)
+        setCategoriesList(menuList)
+        setActiveCategoryId(firstCategoryId)
+        setIsLoading(false)
+      } catch (error) {
+        setHasError(true)
+        setIsLoading(false)
+      }
+    }
+
+    getMenuData()
+  }, [])
+
+  const getCurrentQuantity = dishId => {
+    const savedQuantity = quantities[dishId]
+    if (savedQuantity === undefined) {
+      return 0
+    }
+    return savedQuantity
+  }
+
+  const handleIncrease = dishId => {
+    const currentQuantity = getCurrentQuantity(dishId)
+    const updatedQuantities = {...quantities, [dishId]: currentQuantity + 1}
+    setQuantities(updatedQuantities)
+  }
+
+  const handleDecrease = dishId => {
+    const currentQuantity = getCurrentQuantity(dishId)
+    if (currentQuantity > 0) {
+      const updatedQuantities = {...quantities, [dishId]: currentQuantity - 1}
+      setQuantities(updatedQuantities)
+    }
+  }
+
+  const handleChangeCategory = categoryId => {
+    setActiveCategoryId(categoryId)
+  }
+
+  const getActiveDishes = () => {
+    const activeCategory = categoriesList.find(
+      category => category.menu_category_id === activeCategoryId,
+    )
+    if (activeCategory === undefined) {
+      return []
+    }
+    return activeCategory.category_dishes
+  }
+
+  const renderLoading = () => <p className="status-message">Loading...</p>
+
+  const renderError = () => (
+    <p className="status-message">Something went wrong. Please try again.</p>
+  )
+
+  const renderMenu = () => (
+    <>
+      <CategoryTabs
+        categoriesList={categoriesList}
+        activeCategoryId={activeCategoryId}
+        onChangeCategory={handleChangeCategory}
+      />
+      <DishList
+        dishesList={getActiveDishes()}
+        quantities={quantities}
+        onIncrease={handleIncrease}
+        onDecrease={handleDecrease}
+      />
+    </>
+  )
+
+  const renderContent = () => {
+    if (hasError) {
+      return renderError()
+    }
+    return renderMenu()
+  }
+
+  if (isLoading) {
+    return <div className="home-container">{renderLoading()}</div>
+  }
+
+  return (
+    <div className="home-container">
+      <Header restaurantName={restaurantName} />
+      {renderContent()}
+    </div>
+  )
+}
+
+export default Home

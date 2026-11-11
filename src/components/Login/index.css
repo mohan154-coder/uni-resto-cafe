@@ -1,0 +1,106 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 35px 30px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.login-restaurant-name {
+  margin: 0 0 12px;
+  color: #d95372;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.login-heading {
+  margin: 0 0 28px;
+  color: #323f4b;
+  font-size: 23px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #323f4b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.login-input {
+  width: 100%;
+  height: 44px;
+  margin-bottom: 20px;
+  padding: 0 12px;
+  border: 1px solid #cbd2d9;
+  border-radius: 5px;
+  outline: none;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #323f4b;
+  box-sizing: border-box;
+}
+
+.login-input:focus {
+  border-color: #d95372;
+  box-shadow: 0 0 0 2px rgba(217, 83, 114, 0.12);
+}
+
+.login-button {
+  width: 100%;
+  height: 44px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 5px;
+  background-color: #d95372;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #c94363;
+}
+
+.login-error {
+  margin: 12px 0 0;
+  color: #e53935;
+  font-size: 13px;
+  text-align: center;
+}
+
+@media screen and (max-width: 480px) {
+  .login-container {
+    padding: 18px;
+  }
+
+  .login-form {
+    padding: 28px 22px;
+  }
+
+  .login-restaurant-name {
+    font-size: 25px;
+  }
+
+  .login-heading {
+    font-size: 21px;
+  }
+}

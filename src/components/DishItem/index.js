@@ -1,7 +1,10 @@
+import {useContext} from 'react'
+import CartContext from '../../context/CartContext'
 import './index.css'
 
 const DishItem = props => {
   const {dish, quantity, onIncrease, onDecrease} = props
+  const {addCartItem} = useContext(CartContext)
 
   const {
     dish_id: dishId,
@@ -23,6 +26,7 @@ const DishItem = props => {
   const dotClassName = isVeg ? 'symbol-dot veg-dot' : 'symbol-dot non-veg-dot'
 
   const hasAddons = addonCategories && addonCategories.length > 0
+  const canAddToCart = isDishAvailable && quantity > 0
 
   const handleIncrease = () => {
     onIncrease(dishId)
@@ -30,6 +34,10 @@ const DishItem = props => {
 
   const handleDecrease = () => {
     onDecrease(dishId)
+  }
+
+  const handleAddToCart = () => {
+    addCartItem({...dish, quantity})
   }
 
   const renderQuantityButtons = () => (
@@ -60,6 +68,16 @@ const DishItem = props => {
     <p className="customizations-text">Customizations available</p>
   )
 
+  const renderAddToCartButton = () => (
+    <button
+      type="button"
+      className="add-to-cart-button"
+      onClick={handleAddToCart}
+    >
+      ADD TO CART
+    </button>
+  )
+
   return (
     <li className="dish-item">
       <div className={symbolClassName}>
@@ -73,6 +91,7 @@ const DishItem = props => {
         </p>
         <p className="dish-description">{dishDescription}</p>
         {isDishAvailable ? renderQuantityButtons() : renderNotAvailable()}
+        {canAddToCart ? renderAddToCartButton() : null}
         {isDishAvailable && hasAddons ? renderCustomizations() : null}
       </div>
 

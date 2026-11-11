@@ -1,32 +1,69 @@
+import {useState, useEffect, useContext} from 'react'
+import Header from '../Header'
+import CartContext from '../../context/CartContext'
 import './index.css'
 
-const Cart = props => {
-  const {cartItems, onIncrease, onDecrease, onBackToMenu} = props
+const apiUrl =
+  'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details'
 
-  const totalAmount = cartItems.reduce((total, item) => {
-    const dishPrice = Number(item.dish.dish_price)
+const emptyCartImageUrl =
+  'https://assets.ccbp.in/frontend/react-js/nxt-trendz-empty-cart-img.png'
+
+const Cart = () => {
+  const [restaurantName, setRestaurantName] = useState('')
+  const {
+    cartList,
+    removeAllCartItems,
+    removeCartItem,
+    incrementCartItemQuantity,
+    decrementCartItemQuantity,
+  } = useContext(CartContext)
+
+  useEffect(() => {
+    const getRestaurantName = async () => {
+      try {
+        const response = await fetch(apiUrl)
+        const data = await response.json()
+        const restaurantData = Array.isArray(data) ? data[0] : data
+        const apiRestaurantName = restaurantData.restaurant_name
+        setRestaurantName(apiRestaurantName)
+      } catch (error) {
+        setRestaurantName('')
+      }
+    }
+
+    getRestaurantName()
+  }, [])
+
+  const totalAmount = cartList.reduce((total, item) => {
+    const dishPrice = Number(item.dish_price)
     return total + dishPrice * item.quantity
   }, 0)
 
-  const renderCartItem = item => {
-    const {dish, quantity} = item
+  const handleRemoveAll = () => {
+    removeAllCartItems()
+  }
 
+  const renderCartItem = item => {
     const {
       dish_id: dishId,
       dish_name: dishName,
       dish_price: dishPrice,
       dish_image: dishImage,
       dish_currency: dishCurrency,
-    } = dish
-
-    const itemTotal = Number(dishPrice) * quantity
+      quantity,
+    } = item
 
     const handleIncrease = () => {
-      onIncrease(dishId)
+      incrementCartItemQuantity(dishId)
     }
 
     const handleDecrease = () => {
-      onDecrease(dishId)
+      decrementCartItemQuantity(dishId)
+    }
+
+    const handleRemove = () => {
+      removeCartItem(dishId)
     }
 
     return (
@@ -50,19 +87,24 @@ const Cart = props => {
           </div>
         </div>
 
-        <p className="cart-item-total">
-          {dishCurrency} {itemTotal.toFixed(2)}
-        </p>
+        <button
+          type="button"
+          className="cart-remove-button"
+          aria-label="Remove"
+          onClick={handleRemove}
+        >
+          ✕
+        </button>
       </li>
     )
   }
 
   const renderCartItems = () => {
-    const currency = cartItems[0].dish.dish_currency
+    const currency = cartList[0].dish_currency
 
     return (
       <>
-        <ul className="cart-items-list">{cartItems.map(renderCartItem)}</ul>
+        <ul className="cart-items-list">{cartList.map(renderCartItem)}</ul>
 
         <div className="cart-total">
           <h2>Total Amount</h2>
@@ -74,20 +116,36 @@ const Cart = props => {
     )
   }
 
-  return (
-    <div className="cart-page">
-      <div className="cart-header">
-        <h1>My Orders</h1>
-        <button type="button" onClick={onBackToMenu}>
-          ✕
-        </button>
-      </div>
+  const renderEmptyCart = () => (
+    <div className="empty-cart-container">
+      <img
+        src={emptyCartImageUrl}
+        alt="empty cart"
+        className="empty-cart-image"
+      />
+      <p className="empty-cart-text">Your cart is empty</p>
+    </div>
+  )
 
-      {cartItems.length > 0 ? (
-        renderCartItems()
-      ) : (
-        <p className="empty-cart">Your cart is empty</p>
-      )}
+  return (
+    <div className="cart-container">
+      <Header restaurantName={restaurantName} />
+      <div className="cart-page">
+        <div className="cart-header">
+          <h1>My Orders</h1>
+          {cartList.length > 0 && (
+            <button
+              type="button"
+              className="remove-all-button"
+              onClick={handleRemoveAll}
+            >
+              Remove All
+            </button>
+          )}
+        </div>
+
+        {cartList.length > 0 ? renderCartItems() : renderEmptyCart()}
+      </div>
     </div>
   )
 }
