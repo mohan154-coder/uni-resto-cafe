@@ -44,6 +44,7 @@
 
 .dish-details {
   flex-grow: 1;
+  min-width: 0;
   margin-left: 10px;
 }
 
@@ -53,6 +54,7 @@
   font-weight: 700;
   line-height: 1.2;
   color: #0f172a;
+  overflow-wrap: anywhere;
 }
 
 .dish-price {
@@ -67,6 +69,7 @@
   font-size: 14px;
   line-height: 1.3;
   color: #9aa5b1;
+  overflow-wrap: anywhere;
 }
 
 .quantity-container {
